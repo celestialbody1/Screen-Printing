@@ -90,7 +90,7 @@ optimizer = optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-4)
 
 # Training loop
 
-num_epochs = 2500
+num_epochs = 2000
 epoch_losses = []
 r2_scores = []
 for epoch in range(num_epochs):
