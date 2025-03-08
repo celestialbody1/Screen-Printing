@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from mpl_toolkits.mplot3d import Axes3D
 
 import torch
 import torch.nn as nn
@@ -245,7 +246,7 @@ plt.gca().spines['bottom'].set_linewidth(2)
 plt.gca().spines['left'].set_linewidth(2)
 plt.show()
 
-import seaborn as sns
+
 
 
 correlation_matrix = pd.DataFrame(X, columns=data.columns[:10]).corr()
@@ -274,7 +275,7 @@ for i in range(len(feature_names)):
     plt.gca().spines['left'].set_linewidth(2)
     plt.show()
 
-from mpl_toolkits.mplot3d import Axes3D
+
 
 X1 = X[:, 0]
 X2 = X[:, 2]
@@ -285,197 +286,4 @@ ax = fig.add_subplot(111, projection='3d')
 
 ax.scatter(X1, X2, Y, c=Y, cmap="viridis", marker="o", alpha=0.6)
 
-plt.show()
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, r2_score
-
-
-data = pd.read_csv('AI_ML.csv')
-
-data = data.replace({',': ''}, regex=True)
-data = data.apply(pd.to_numeric, errors='coerce')
-
-
-X = data.iloc[:, :10].values
-y = data.iloc[:, 10].values
-
-
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X_scaled, y, test_size=0.08, random_state=42
-)
-
-rf = RandomForestRegressor(n_estimators=100, random_state=42)
-rf.fit(X_train, y_train)
-
-
-y_pred = rf.predict(X_test)
-
-
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print(f"Test MSE: {mse:.4f}")
-print(f"R² Score: {r2:.4f}")
-
-
-plt.scatter(y_test, y_pred, alpha=1, label='Predicted vs. True')
-
-plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', label='Perfect Prediction')
-
-plt.xlabel('True Values', fontsize=14, fontweight='bold')
-plt.ylabel('Predicted Values', fontsize=14, fontweight='bold')
-
-plt.xticks(fontsize=12, fontweight='bold')
-plt.yticks(fontsize=12, fontweight='bold')
-plt.legend(fontsize=12, loc='upper left', frameon=True, prop={'weight': 'bold'})
-plt.gca().spines['top'].set_linewidth(2)
-plt.gca().spines['right'].set_linewidth(2)
-plt.gca().spines['bottom'].set_linewidth(2)
-plt.gca().spines['left'].set_linewidth(2)
-plt.show()
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import xgboost as xgb
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error, r2_score
-
-
-data = pd.read_csv('AI_ML_1.csv')
-
-
-data = data.replace({',': ''}, regex=True)
-data = data.apply(pd.to_numeric, errors='coerce')
-
-
-X = data.iloc[:, :10].values
-y = data.iloc[:, 10].values
-
-
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X_scaled, y, test_size=0.08, random_state=42
-)
-
-
-xgb_reg = xgb.XGBRegressor(
-    n_estimators=100,
-    learning_rate=0.1,
-    max_depth=6,
-    subsample=0.8,
-    colsample_bytree=0.8,
-    random_state=42
-)
-
-xgb_reg.fit(X_train, y_train)
-
-
-y_pred = xgb_reg.predict(X_test)
-
-
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print(f"Test MSE: {mse:.4f}")
-print(f"R² Score: {r2:.4f}")
-
-
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred, alpha=1, label='Predicted vs. True')
-plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', label='Perfect Prediction')
-
-plt.xlabel('True Values', fontsize=12, fontweight='bold')
-plt.ylabel('Predicted Values', fontsize=12, fontweight='bold')
-plt.xticks(fontsize=12, fontweight='bold')
-plt.yticks(fontsize=12, fontweight='bold')
-plt.legend(fontsize=12, loc='upper left', frameon=True, prop={'weight': 'bold'})
-plt.gca().spines['top'].set_linewidth(2)
-plt.gca().spines['right'].set_linewidth(2)
-plt.gca().spines['bottom'].set_linewidth(2)
-plt.gca().spines['left'].set_linewidth(2)
-plt.show()
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import lightgbm as lgb
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error, r2_score
-
-
-data = pd.read_csv('AI_ML_1.csv')
-data = data.replace({',': ''}, regex=True)
-data = data.apply(pd.to_numeric, errors='coerce')
-
-
-X = data.iloc[:, :10].values
-y = data.iloc[:, 10].values
-
-
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X_scaled, y, test_size=0.08, random_state=42
-)
-
-
-lgb_reg = lgb.LGBMRegressor(
-    n_estimators=500,
-    learning_rate=0.05,
-    max_depth=10,
-    num_leaves=60,
-    min_child_samples=5,
-    subsample=0.9,
-    colsample_bytree=0.9,
-    reg_alpha=0.1,
-    reg_lambda=0.1,
-    random_state=42
-)
-
-lgb_reg.fit(X_train, y_train)
-
-
-y_pred = lgb_reg.predict(X_test)
-
-
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print(f"Test MSE: {mse:.4f}")
-print(f"R² Score: {r2:.4f}")
-
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred, alpha=1, label='Predicted vs. True')
-plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', label='Perfect Prediction')
-
-plt.xlabel('True Values', fontsize=12, fontweight='bold')
-plt.ylabel('Predicted Values', fontsize=12, fontweight='bold')
-plt.xticks(fontsize=12, fontweight='bold')
-plt.yticks(fontsize=12, fontweight='bold')
-plt.legend(fontsize=12, loc='upper left', frameon=True, prop={'weight': 'bold'})
-plt.gca().spines['top'].set_linewidth(2)
-plt.gca().spines['right'].set_linewidth(2)
-plt.gca().spines['bottom'].set_linewidth(2)
-plt.gca().spines['left'].set_linewidth(2)
 plt.show()
