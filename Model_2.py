@@ -185,20 +185,44 @@ plt.title('True vs Predicted Values')
 plt.legend()
 plt.show()
 
-resistivity = float(input("Enter resistivity (rho): "))  # User input for resistivity
-length = float(input("Enter length (L): "))  # User input for length
-width = float(input("Enter width (W): "))  # User input for width
+torch.save(model, 'full_model_22.pth')
+import warnings
+warnings.filterwarnings('ignore', category=FutureWarning)
+model = torch.load('/content/full_model_22.pth')
+model.eval()
+example_input = torch.tensor([5.2582,100,20]).float() 
+example_input_normalized = (example_input - torch.tensor(mean, dtype=torch.float32)) / torch.tensor(std, dtype=torch.float32)
 
-dry_thickness = 13.45
 
-# Calculate rho_naught using the given formula
-rho_naught = 25.4 * resistivity
+with torch.no_grad():  
+    output = model(example_input_normalized)
+    print(output)
 
-# Calculate rs value
-rs = rho_naught / dry_thickness
+with torch.no_grad():
+    output = model(example_input_normalized)
 
-# Calculate the final result by multiplying by the factor (L / W)
-final_result = rs * (length / width)
 
-# Output the final result
-print(f"The final result is: {final_result:.4f}")
+dry_thickness_microns = output.item() 
+
+
+resistivity = float(input("Enter resistivity (ohms/square/mil): "))
+length_mm = float(input("Enter length (mm): "))
+width_mm = float(input("Enter width (mm): "))
+
+
+length_m = length_mm / 1000  
+width_m = width_mm / 1000  
+dry_thickness_m = dry_thickness_microns / 1e6  
+
+
+rho_naught = resistivity * (25.4e-6)
+
+
+rs = rho_naught / dry_thickness_m  
+
+
+resistance = rs * (length_m / width_m)
+
+
+print(f"\nPredicted Dry Thickness: {dry_thickness_microns:.4f} µm")
+print(f"The calculated resistance of the heater is: {resistance:.4f} Ω")
